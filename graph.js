@@ -23,8 +23,13 @@ const arcPath = d3.arc()
     .outerRadius(dims.radius)
     .innerRadius(dims.radius / 2);
 
+const colour = d3.scaleOrdinal(d3['schemeSet3']) // d3 build-in color scheme
+
 //update function
 const update = (data) => {
+
+    // update colour scale domain
+    colour.domain(data.map(d => d.name));
    
     // join enhanced (pie) data to path elements
     const paths = graph.selectAll('path')
@@ -36,6 +41,7 @@ const update = (data) => {
             .attr('d', arcPath)
             .attr('stroke', '#fff')
             .attr('stroke-width', 3)
+            .attr('fill', d => colour(d.data.name));
 
   
 }
@@ -66,5 +72,3 @@ db.collection('expenses').onSnapshot(res => {
 
     update(data);
 });
-
-console.log(arcPath(angles[0]))
