@@ -68,6 +68,11 @@ const update = (data) => {
             .each(function(d){ this._current = d })
             .transition().duration(750)
                 .attrTween("d", arcTweenEnter);
+    
+    // add events 
+    graph.selectAll('path')
+        .on('mouseover', handleMouseOver)
+        .on('mouseout', handleMouseOut)
 
   
 }
@@ -130,3 +135,20 @@ function arcTweenUpdate(d)  {
   }
 
 }
+
+// event handles
+const handleMouseOver = (event, d) => {
+    //console.log(event.currentTarget);
+    d3.select(event.currentTarget)
+        .transition('changeSlicefill') // give transition name doesnt affect other transition
+        .duration(300)
+        .attr("fill", "#fff");
+  };
+
+  const handleMouseOut = (event, d) => {
+    //console.log(event.currentTarget);
+    d3.select(event.currentTarget)
+        .transition('changeSlicefill')
+        .duration(300)
+            .attr("fill", colour(d.data.name));
+  };
