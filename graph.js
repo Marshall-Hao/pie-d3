@@ -73,6 +73,7 @@ const update = (data) => {
     graph.selectAll('path')
         .on('mouseover', handleMouseOver)
         .on('mouseout', handleMouseOut)
+        .on('click', handleClick)
 
   
 }
@@ -145,10 +146,15 @@ const handleMouseOver = (event, d) => {
         .attr("fill", "#fff");
   };
 
-  const handleMouseOut = (event, d) => {
+const handleMouseOut = (event, d) => {
     //console.log(event.currentTarget);
     d3.select(event.currentTarget)
         .transition('changeSlicefill')
         .duration(300)
             .attr("fill", colour(d.data.name));
+  };
+
+  const handleClick = (event, d) => {
+    const id = d.data.id;
+    db.collection("expenses").doc(id).delete();
   };
