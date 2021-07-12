@@ -34,6 +34,17 @@ const legend = d3.legendColor()
     .shapePadding(10)
     .scale(colour);
 
+const tip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "card")
+    .style("padding", "8px") // Add some padding so the tooltip content doesn't touch the border of the tooltip
+    .style("position", "absolute") // Absolutely position the tooltip to the body. Later we'll use transform to adjust the position of the tooltip
+    .style("left", 0)
+    .style("top", 0)
+    .style("visibility", "hidden");
+
+// graph.call(tip)
 //update function
 const update = (data) => {
 
@@ -74,6 +85,9 @@ const update = (data) => {
         .on('mouseover', handleMouseOver)
         .on('mouseout', handleMouseOut)
         .on('click', handleClick)
+        .on('mousemove', (event) => {
+            tip.style("transform", `translate(${event.pageX}px,${event.pageY}px)`); // We can calculate the mouse's position relative the whole page by using event.pageX and event.pageY.
+          })
 
   
 }
@@ -140,6 +154,10 @@ function arcTweenUpdate(d)  {
 // event handles
 const handleMouseOver = (event, d) => {
     //console.log(event.currentTarget);
+    let content = `<div class="name">${d.data.name}</div>`;
+      content += `<div class="cost">¥${d.data.cost}</div>`;
+      content += `<div class="delete">Click slice to delete</div>`;
+      tip.html(content).style("visibility", "visible");
     d3.select(event.currentTarget)
         .transition('changeSlicefill') // give transition name doesnt affect other transition
         .duration(300)
@@ -148,6 +166,7 @@ const handleMouseOver = (event, d) => {
 
 const handleMouseOut = (event, d) => {
     //console.log(event.currentTarget);
+    tip.style("visibility", "hidden");
     d3.select(event.currentTarget)
         .transition('changeSlicefill')
         .duration(300)
