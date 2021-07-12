@@ -35,6 +35,15 @@ const update = (data) => {
     const paths = graph.selectAll('path')
         .data(pie(data));
     
+    paths.exit().remove();
+
+    paths.attr('class', 'arc')
+        .attr('d', arcPath)
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 3)
+        .attr('fill', d => colour(d.data.name));
+
+
     paths.enter()
         .append('path')
             .attr('class', 'arc')
